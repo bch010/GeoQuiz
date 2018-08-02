@@ -33,7 +33,7 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         //controller part
-        // Link question from bank to view
+        // Link question from question bank to view
         mQuestionTextView = findViewById(R.id.question_text_view);
 
         onTrueButtonClick();
