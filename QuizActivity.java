@@ -16,6 +16,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
     private TextView mQuestionTextView;
+    private TextView textView_nextQuestion;
 
     // True/False array
     private TrueFalse[] mQuestionBank = new TrueFalse[]{
@@ -25,23 +26,45 @@ public class QuizActivity extends AppCompatActivity {
             new TrueFalse(R.string.question_americas, true),
             new TrueFalse(R.string.question_asia, true),
     };
-    private int mCurrentIndex = 0;
+
+    private int mCurrentIndex = 0; // start quiz from question 1
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt("index", 0);
+        }
 
         //controller part
-        // Link question from question bank to view
-        mQuestionTextView = findViewById(R.id.question_text_view);
 
+        mQuestionTextView = findViewById(R.id.question_text_view);
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            // When TextView is pressed, user sees next question
+            @Override
+            public void onClick(View v) {
+                mCurrentIndex = (mCurrentIndex + mQuestionBank.length - 1) % mQuestionBank.length;
+                updateQuestion();
+            }
+        });
+
+        // Link question from question bank to view
+        // Sets up event handlers for the button clicks
         onTrueButtonClick();
         onFalseButtonClick();
         onNextButtonClick();
         onPrevButtonClick();
+
         updateQuestion(); // first time called add 1 to set text
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("index", mCurrentIndex);
+    }
+
 
     /**
      * When true button is pressed, returns correct answer
@@ -104,7 +127,6 @@ public class QuizActivity extends AppCompatActivity {
      * Updates questions
      */
     private void updateQuestion() {
-
         int question = mQuestionBank[mCurrentIndex].getQuestion();
         mQuestionTextView.setText(question);
     }
@@ -120,8 +142,9 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             messageResId = R.string.incorrect_toast;
         }
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
-                .show();
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
+
+
 }
 
