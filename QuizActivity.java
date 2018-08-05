@@ -1,8 +1,9 @@
 package com.bignerdranch.android.geoquiz;
 
-import android.content.Intent; // to interact with components from the same applications as well as with components contributed by other applications
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,6 +22,10 @@ public class QuizActivity extends AppCompatActivity {
     private boolean mIsCheater;
     private TextView mQuestionTextView;
 
+    private static final String TAG = "QuizActivity";
+    private static final String KEY_INDEX = "index";
+    private static final String KEY_IS_CHEATER_ARRAY = "is_cheater_array";
+
     // True/False array
     private TrueFalse[] mQuestionBank = new TrueFalse[]{
             new TrueFalse(R.string.question_oceans, true),
@@ -30,15 +35,24 @@ public class QuizActivity extends AppCompatActivity {
             new TrueFalse(R.string.question_asia, true),
     };
 
+    // Save "Cheater Status" of questions.  All values will default to false
+    private boolean[] mCheaterStatus = new boolean[mQuestionBank.length];
+
     private int mCurrentIndex = 0; // start quiz from question 1
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        Log.d(TAG, "onCreate(Bundle) called"); // page 55
+
+        // Check if redrawing after a state change?
         if (savedInstanceState != null) {
-            mCurrentIndex = savedInstanceState.getInt("index", 0);
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mCheaterStatus = savedInstanceState.getBooleanArray(KEY_IS_CHEATER_ARRAY);
         }
+
+        Log.d(TAG, "onCreate(): Pacific Ocean CheaterStats: " + mCheaterStatus[0]);
 
         //controller part
 
@@ -61,13 +75,51 @@ public class QuizActivity extends AppCompatActivity {
         onPrevButtonClick();
         onCheatButtonClick();
 
-        updateQuestion(); // first time called add 1 to set text
+        updateQuestion(); // first time called add 1 to set_text
     }
+
+    // page 55
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
+    }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt("index", mCurrentIndex);
+        savedInstanceState.putBooleanArray(KEY_IS_CHEATER_ARRAY, mCheaterStatus);
+        Log.i(TAG, "onSaveInstanceState");
+
+        Log.d(TAG, "onSaveInstanceState: Pacific Ocean CheaterStats: " + mCheaterStatus[0]);
+
     }
 
 
@@ -175,14 +227,13 @@ public class QuizActivity extends AppCompatActivity {
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 
-    // Check if user cheated
+    // Check if cheated
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (data == null) {
             return;
         }
-        mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+        mCheaterStatus[mCurrentIndex] = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
     }
 
 }
