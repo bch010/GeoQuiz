@@ -52,7 +52,10 @@ public class QuizActivity extends AppCompatActivity {
             mCheaterStatus = savedInstanceState.getBooleanArray(KEY_IS_CHEATER_ARRAY);
         }
 
-        Log.d(TAG, "onCreate(): Pacific Ocean CheaterStats: " + mCheaterStatus[0]);
+        Log.d(TAG, "onCreate(): Current Index: " + mCurrentIndex);
+        Log.i(TAG, "onCreate(): Current Index: " + mCurrentIndex);
+        Log.i(TAG, "onCreate(): PO CheaterStats: " + mCheaterStatus[0]);
+        Log.d(TAG, "onCreate(): PO CheaterStats: " + mCheaterStatus[0]);
 
         //controller part
 
@@ -78,7 +81,7 @@ public class QuizActivity extends AppCompatActivity {
         updateQuestion(); // first time called add 1 to set_text
     }
 
-    // page 55
+    // from page 55
     @Override
     public void onStart() {
         super.onStart();
@@ -113,12 +116,16 @@ public class QuizActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt("index", mCurrentIndex);
         savedInstanceState.putBooleanArray(KEY_IS_CHEATER_ARRAY, mCheaterStatus);
+
+        //Send a INFO log message and log the exception.
         Log.i(TAG, "onSaveInstanceState");
 
-        Log.d(TAG, "onSaveInstanceState: Pacific Ocean CheaterStats: " + mCheaterStatus[0]);
+        //Send a DEBUG log message.
+        Log.d(TAG, "onSaveInstanceState: PO2 CheaterStats: " + mCheaterStatus[0]);
 
     }
 
@@ -127,6 +134,7 @@ public class QuizActivity extends AppCompatActivity {
      * When true button is pressed, returns correct answer
      */
     protected void onTrueButtonClick() {
+
         mTrueButton = findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
 
@@ -154,6 +162,7 @@ public class QuizActivity extends AppCompatActivity {
      * When next button is pressed, returns next questions
      */
     protected void onNextButtonClick() {
+
         mNextButton = findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
 
@@ -170,11 +179,13 @@ public class QuizActivity extends AppCompatActivity {
      * When previous button is pressed, returns next questions
      */
     protected void onPrevButtonClick() {
+
         mPrevButton = findViewById(R.id.prev_button);
         mPrevButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
                 mCurrentIndex = (mCurrentIndex + mQuestionBank.length - 1) % mQuestionBank.length; // ' + mQuestionBank.length' so does not throw out of bounds.. just loops
                 updateQuestion(); // called as part of the onCreate method, sets a default value to Textview
             }
@@ -185,11 +196,13 @@ public class QuizActivity extends AppCompatActivity {
      * When clicked, displays answer
      */
     protected void onCheatButtonClick() {
+
         mCheatButton = findViewById(R.id.cheat_button);
         mCheatButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
                 Intent i = new Intent(QuizActivity.this, CheatActivity.class);
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
                 i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, answerIsTrue); // intent extra
@@ -203,6 +216,7 @@ public class QuizActivity extends AppCompatActivity {
      * Updates questions
      */
     private void updateQuestion() {
+
         int question = mQuestionBank[mCurrentIndex].getQuestion();
         mQuestionTextView.setText(question);
     }
@@ -230,6 +244,7 @@ public class QuizActivity extends AppCompatActivity {
     // Check if cheated
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (data == null) {
             return;
         }
