@@ -14,10 +14,7 @@ public class CheatActivity extends AppCompatActivity {
 
     public static final String EXTRA_ANSWER_IS_TRUE = "com.bignerdranch.android.geoquiz.answer_is_true";
     public static final String EXTRA_ANSWER_SHOWN = "com.bignerdranch.android.geoquiz.answer_shown";
-
     private static final String KEY_IS_CHEATER = "is_cheater";
-
-
 
 
     //declare buttons
@@ -33,23 +30,23 @@ public class CheatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
-        mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
-
-        // TextView link
-        mAnswerTextView = findViewById(R.id.answerTextView);
-
         mIsCheater = false;
 
-        // Check to see if we are actually just redrawing after a state change
-        if (savedInstanceState != null) {
-            mIsCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER);
+        // Retrieve a saved bundle in onCreate()
+        if (savedInstanceState != null) { // Null -  checking for null in case the views have nothing to load
+            mIsCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER); // If has null (views have nothing to load), load KEY_IS_CHEATER.
             setAnswerShownResult(true);
         } else {
-            // Answer won't be shown until user clicks the button
+            // User clicks button to show answer
             setAnswerShownResult(false);
         }
 
         onShowAnswer();
+
+        mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
+
+        // TextView link
+        mAnswerTextView = findViewById(R.id.answerTextView);
     }
 
     /**
@@ -80,7 +77,7 @@ public class CheatActivity extends AppCompatActivity {
                     mAnswerTextView.setText(R.string.false_button);
                 }
                 setAnswerShownResult(true);// the answer was seen
-//                mIsCheater = true;// the user cheated
+                mIsCheater = true;// the user cheated
 
             }
         });
@@ -93,6 +90,4 @@ public class CheatActivity extends AppCompatActivity {
 
         savedInstanceState.putBoolean(KEY_IS_CHEATER, mIsCheater);
     }
-
-
 }

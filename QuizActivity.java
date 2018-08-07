@@ -24,7 +24,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
-    private static final String KEY_IS_CHEATER_ARRAY = "is_cheater_array";
 
     // True/False array
     private TrueFalse[] mQuestionBank = new TrueFalse[]{
@@ -35,9 +34,6 @@ public class QuizActivity extends AppCompatActivity {
             new TrueFalse(R.string.question_asia, true),
     };
 
-    // Save "Cheater Status" of questions.  All values will default to false
-    private boolean[] mCheaterStatus = new boolean[mQuestionBank.length];
-
     private int mCurrentIndex = 0; // start quiz from question 1
 
     @Override
@@ -46,16 +42,18 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
         Log.d(TAG, "onCreate(Bundle) called"); // page 55
 
-        // Check if redrawing after a state change?
+        // Retrieve a saved bundle in onCreate()
         if (savedInstanceState != null) {
-            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
-            mCheaterStatus = savedInstanceState.getBooleanArray(KEY_IS_CHEATER_ARRAY);
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0); // If has null (views have nothing to load), load KEY_INDEX, which might not exist, so 0 used as a default return value.
+
         }
 
+
+        // printing out various states, see output
         Log.d(TAG, "onCreate(): Current Index: " + mCurrentIndex);
         Log.i(TAG, "onCreate(): Current Index: " + mCurrentIndex);
-        Log.i(TAG, "onCreate(): PO CheaterStats: " + mCheaterStatus[0]);
-        Log.d(TAG, "onCreate(): PO CheaterStats: " + mCheaterStatus[0]);
+        Log.i(TAG, "onCreate(): mIsCheater Status: " + mIsCheater);
+        Log.d(TAG, "onCreate(): mIsCheater Status: " + mIsCheater);
 
         //controller part
 
@@ -112,20 +110,18 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy() called");
     }
 
-
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-
+        //page 66
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt("index", mCurrentIndex);
-        savedInstanceState.putBooleanArray(KEY_IS_CHEATER_ARRAY, mCheaterStatus);
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+
 
         //Send a INFO log message and log the exception.
-        Log.i(TAG, "onSaveInstanceState");
+        Log.i(TAG, "onSaveInstanceState: what is this output for?" + mCurrentIndex);
 
         //Send a DEBUG log message.
-        Log.d(TAG, "onSaveInstanceState: PO2 CheaterStats: " + mCheaterStatus[0]);
+        Log.d(TAG, "onSaveInstanceState: mIsCheater Status: " + mIsCheater);
 
     }
 
@@ -190,6 +186,7 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion(); // called as part of the onCreate method, sets a default value to Textview
             }
         });
+
     }
 
     /**
@@ -207,9 +204,10 @@ public class QuizActivity extends AppCompatActivity {
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
                 i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, answerIsTrue); // intent extra
                 startActivityForResult(i, 0);
+                updateQuestion();
             }
         });
-        updateQuestion();
+
     }
 
     /**
@@ -248,7 +246,7 @@ public class QuizActivity extends AppCompatActivity {
         if (data == null) {
             return;
         }
-        mCheaterStatus[mCurrentIndex] = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+        mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
     }
 
 }
