@@ -36,6 +36,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0; // start quiz from question 1
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class QuizActivity extends AppCompatActivity {
         // Retrieve a saved bundle in onCreate()
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0); // If has null (views have nothing to load), load KEY_INDEX, which might not exist, so 0 used as a default return value.
-
+            // need something here to load ' mIsCheater'
         }
 
 
@@ -124,7 +125,6 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onSaveInstanceState: mIsCheater Status: " + mIsCheater);
 
     }
-
 
     /**
      * When true button is pressed, returns correct answer
@@ -247,6 +247,9 @@ public class QuizActivity extends AppCompatActivity {
             return;
         }
         mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+
+
+
     }
 
 }
