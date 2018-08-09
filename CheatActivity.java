@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 public class CheatActivity extends AppCompatActivity {
 
-    //
     private static final String TAG = "CheatActivity";
     public static final String EXTRA_ANSWER_IS_TRUE = "com.bignerdranch.android.geoquiz.answer_is_true"; // The activity that will receive the extra
     public static final String EXTRA_ANSWER_SHOWN = "com.bignerdranch.android.geoquiz.answer_shown";
@@ -55,18 +54,24 @@ public class CheatActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
                 if (mAnswerIsTrue) {
+
                     mAnswerTextView.setText(R.string.true_button);
                 } else {
+
                     mAnswerTextView.setText(R.string.false_button);
                 }
+
                 setAnswerShownResult(true);
             }
         });
 
-        if (savedInstanceState != null) {
+        // retrieve index state
+        if (savedInstanceState != null) { //bundle is null when the activity is first created.
 
             setAnswerShownResult(savedInstanceState.getBoolean(KEY_IS_CHEATER, false));
+
             if (mAnswerIsTrue) {
 
                 mAnswerTextView.setText(R.string.true_button);

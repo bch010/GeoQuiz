@@ -219,6 +219,9 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Save information directly related to the current Activity state
+     */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         //page 66
@@ -266,6 +269,4 @@ public class QuizActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
     }
-
-
 }
