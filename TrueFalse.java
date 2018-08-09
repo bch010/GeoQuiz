@@ -16,7 +16,7 @@ public class TrueFalse {
         return mQuestion;
     }
 
-    private void setQuestion(int question) {
+    public void setQuestion(int question) {
         mQuestion = question;
     }
 

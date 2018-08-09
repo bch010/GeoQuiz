@@ -10,13 +10,12 @@ import android.widget.TextView;
 
 public class CheatActivity extends AppCompatActivity {
 
+    //
     private static final String TAG = "CheatActivity";
-
-    public static final String EXTRA_ANSWER_IS_TRUE = "com.bignerdranch.android.geoquiz.answer_is_true";
+    public static final String EXTRA_ANSWER_IS_TRUE = "com.bignerdranch.android.geoquiz.answer_is_true"; // The activity that will receive the extra
     public static final String EXTRA_ANSWER_SHOWN = "com.bignerdranch.android.geoquiz.answer_shown";
 
-    private static final String KEY_IS_CHEATER = "is_cheater";
-
+    private static final String KEY_IS_CHEATER = "mIsCheater";
 
     //declare
     private Button mShowAnswer;
@@ -37,77 +36,58 @@ public class CheatActivity extends AppCompatActivity {
         Log.d(TAG, "setAnswerShownResult: isAnswerShown: " + isAnswerShown);
         setResult(RESULT_OK, data);
         mIsCheater = isAnswerShown;
+        Log.d(TAG, "setAnswerShownResult: mIsCheater=isAnswerShown: " + mIsCheater);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
-//        mIsCheater = false;
-
-        // Retrieve a saved bundle in onCreate()
-        if (savedInstanceState != null) { // Null -  checking for null in case the views have nothing to load
-
-//            mIsCheater = savedInstanceState.getBoolean(KEY_IS_CHEATER, false); // If has null (views have nothing to load), load KEY_IS_CHEATER.
-//            mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
-            setAnswerShownResult(savedInstanceState.getBoolean(KEY_IS_CHEATER));
-
-        } else { // no savedInstanceState
-
-//            mIsCheater = false;// they haven't cheated yet
-            setAnswerShownResult(false); // User has not seen the answer yet
-        }
-
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
+        setAnswerShownResult(false);
 
-        // TextView link
+        // Link Show Answer Button and listen for click
         mAnswerTextView = findViewById(R.id.answerTextView);
-        onShowAnswer();
-    }
-
-    /**
-     * Displays answer when button is clicked
-     * Link Show Answer Button and listen for click
-     */
-    protected void onShowAnswer() {
-
         mShowAnswer = findViewById(R.id.showAnswerButton);
+
         mShowAnswer.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
                 if (mAnswerIsTrue) {
                     mAnswerTextView.setText(R.string.true_button);
                 } else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
-
-                setAnswerShownResult(true);// the answer was seen
-//                mIsCheater = true;// the user cheated
-
+                setAnswerShownResult(true);
             }
         });
 
+        if (savedInstanceState != null) {
 
+            setAnswerShownResult(savedInstanceState.getBoolean(KEY_IS_CHEATER, false));
+            if (mAnswerIsTrue) {
+
+                mAnswerTextView.setText(R.string.true_button);
+
+            } else {
+                mAnswerTextView.setText(R.string.false_button);
+            }
+        }
     }
 
+    /**
+     * saves data to the Bundle before the activity is destroyed.
+     */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putBoolean(KEY_IS_CHEATER, mIsCheater);// save the cheat status of the user onSaveInstanceState  
-//        savedInstanceState.putBoolean(EXTRA_ANSWER_IS_TRUE, mAnswerIsTrue);// get whether ? was True/false onSaveInstanceState issuance
+        savedInstanceState.putBoolean(KEY_IS_CHEATER, mIsCheater);// save the cheat status of the user onSaveInstanceState
 
-
-        Log.i(TAG, "onSaveInstanceState: Is answer shown " + mAnswerIsTrue);
-        Log.i(TAG, "onSaveInstanceState: Is cheater " + mIsCheater);
-
-
+        Log.i(TAG, "onSaveInstanceState: Is answer shown: " + mAnswerIsTrue);
+        Log.i(TAG, "onSaveInstanceState: Is cheater: " + mIsCheater);
     }
-
-
 }
